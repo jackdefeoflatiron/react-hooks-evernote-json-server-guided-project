@@ -16,12 +16,26 @@ function NoteContainer({NoteItem}) {
   }
   useEffect(fetchNotes, [])
 
-  const renderNotes = notes.map(notes => <NoteItem key={notes.id} notes={notes} />)
+  const [searchInput, setSearchInput] = useState("")
+  const [newNotes, setNewNotes] = useState([])
+ 
+  const searchNotes = (e) => {
+    console.log(e.target.value)
+    setSearchInput(e.target.value)
+    setNewNotes(notes.filter(notes => {return  notes.title.includes(searchInput) }))
+  }
+  console.log(searchInput)
+  
   return (
     <>
-      <Search />
+      <Search 
+      searchNotes={searchNotes}
+      notes={notes}/>
       <div className="container">
-        <Sidebar />
+        <Sidebar 
+        
+        notes={notes}
+        />
         <Content />
       </div>
     </>

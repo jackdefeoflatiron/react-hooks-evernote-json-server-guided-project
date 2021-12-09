@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 
-function Search() {
+function Search({notes,searchNotes, searchInput}) {
+ 
+
+  
   return (
     <div className="filter">
-      <input id="search-bar" type="text" placeholder="Search Notes" />
+      <input 
+      onChange={searchNotes}
+      id="search-bar" 
+      type="text" 
+      placeholder="Search Notes" 
+      value={searchInput}
+      />
     </div>
   );
 }
