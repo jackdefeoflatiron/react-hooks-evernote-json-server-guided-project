@@ -3,7 +3,7 @@ import Search from "./Search";
 import Sidebar from "./Sidebar";
 import Content from "./Content";
 
-function NoteContainer() {
+function NoteContainer({NoteItem}) {
   const [notes, setNotes] = useState([])
   
   const fetchNotes = () => {
@@ -16,7 +16,7 @@ function NoteContainer() {
   }
   useEffect(fetchNotes, [])
 
-  
+  const renderNotes = notes.map(notes => <NoteItem key={notes.id} notes={notes} />)
   return (
     <>
       <Search />

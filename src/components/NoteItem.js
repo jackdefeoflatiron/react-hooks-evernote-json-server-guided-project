@@ -1,10 +1,11 @@
 import React from "react";
+import NoteList from "./NoteList";
 
-function NoteItem() {
+function NoteItem({notes}) {
   return (
     <li>
-      <h2>Title</h2>
-      <p>Caption...</p>
+      <h2>Title {notes.title}</h2>
+      <p>Caption {notes.body}...</p>
     </li>
   );
 }
