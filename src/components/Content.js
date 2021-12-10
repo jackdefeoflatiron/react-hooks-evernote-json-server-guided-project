@@ -11,6 +11,9 @@ import Instructions from "./Instructions";
           refactor to get this Content component to work.
 */
 function Content() {
+
+  
+
   const getContent = () => {
     if (false) {
       return <NoteEditor />;

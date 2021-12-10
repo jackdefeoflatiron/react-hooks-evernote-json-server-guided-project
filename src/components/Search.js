@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 
-function Search({notes,searchNotes, searchInput}) {
- 
+function Search({setSearchInput}) {
 
-  
   return (
     <div className="filter">
       <input 
-      onChange={searchNotes}
+      onChange={(e)=>setSearchInput(e.target.value)}
       id="search-bar" 
       type="text" 
       placeholder="Search Notes" 
-      value={searchInput}
       />
     </div>
   );
