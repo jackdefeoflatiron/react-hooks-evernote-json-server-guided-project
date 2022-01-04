@@ -1,50 +1,58 @@
-import React, {useEffect,useState} from "react";
+import React, { useState } from "react";
 
-function NoteEditor({setViewerState, viewNote, note, setViewNote}) {
-  const [newTitle, setNewTitle] = useState(`${viewNote.title}`)
-  const [newBody, setNewBody] = useState(`${viewNote.body}`)
-  const handleSave = (viewNote, e) => {
-    e.preventDefault()
-   
-      
-      
-      fetch(`http://localhost:3000/notes/${viewNote.id}`, 
-      {method : "PATCH",
-        headers : {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          title: `${newTitle}`,
-          body: `${newBody}`
-        })
-      })
+function NoteEditor({note,onCancel}) {
+  const [noteTitle, setNoteTitle] = useState(note.title)
+  const [noteBody, setNoteBody] = useState(note.body)
 
-      .then(res =>res.json())
-      .then(data => setViewNote(data))
 
+  const saveChanges = (e) => {
+    e.preventDefault();
+    let editedNote = {
+      userId: note.userId,
+      title: noteTitle,
+      body: noteBody
     }
-
+    fetch(`http://localhost:3000/notes/${note.id}`, {
+      method: "PATCH",
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(editedNote),
+    })
+    note.title = noteTitle
+    note.body = noteBody
+    onCancel(false)
+  }
+  const handleNoteCancel = () => {
+    setNoteTitle(note.title)
+    setNoteBody(note.body)
+    onCancel(false)
+  }
   return (
     <form className="note-editor">
-      <input 
-      type="text" 
-      defaultValue={viewNote.title} 
+      <input
+      type="text"
       name="title" 
-      onChange={(e)=> setNewTitle(e.target.value)}
+      value={noteTitle}
+      onChange={(e) => setNoteTitle(e.target.value)}
       />
       <textarea 
       name="body" 
-      defaultValue={viewNote.body} 
-      onChange={(e)=> setNewBody(e.target.value)} 
+      value={noteBody}
+      onChange={(e)=> setNoteBody(e.target.value)}
       />
       <div className="button-row">
         <input 
         className="button" 
         type="submit" 
-        value="Save"
-        onClick={(e)=>handleSave(viewNote,e)} />
-        <button onClick={()=>setViewerState('viewer')} type="button">Cancel</button>
+        value="Save" 
+        onClick={(e) => saveChanges(e)}/>
+        <button onClick={handleNoteCancel} type="button">Cancel</button>
       </div>
     </form>
   );
 }
 
 export default NoteEditor;
+

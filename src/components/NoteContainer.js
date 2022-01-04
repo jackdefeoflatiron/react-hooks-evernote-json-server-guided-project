@@ -1,77 +1,50 @@
-import React, {useState, useEffect} from "react";
+import React, { useState,useEffect} from "react";
 import Search from "./Search";
 import Sidebar from "./Sidebar";
 import Content from "./Content";
 
 function NoteContainer() {
-  const [notes, setNotes] = useState([])
+  const [notes, setAllNotes] = useState([])
+  const [selectedNotes, setSelectedNotes] = useState("")
+  const [searchNotes, setSearchNotes] = useState("")
+  const [isEdit, toggleIsEdit] = useState(false)
+  const [isSelected, setIsSelected] = useState(false)
 
-  
-  
-  const fetchNotes = () => {
+
+  const displayNote = notes.filter((note) => {
+    if (searchNotes === "") return true;
+    return note.title.toUpperCase().includes(searchNotes.toUpperCase()) 
+  })
+
+
+  useEffect(() => {
     fetch("http://localhost:3000/notes")
     .then(res => res.json())
-    .then(notesData => {
-      console.log(notesData)
-      setNotes(notesData)
-    })
-  }
-  useEffect(fetchNotes, [])
+    .then(data => setAllNotes(data))
+  },[])
 
-  const [searchInput, setSearchInput] = useState("")
-
-  
- 
-  
-  const newNotes = notes.filter(note => note.title.toLowerCase().includes(searchInput.toLowerCase()))
-  
-  
-
-  const [viewedNote, setViewedNote] = useState("")
-  const [viewerState, setViewerState] = useState(null)
-  const [viewNote, setViewNote] =useState([])
-
-  console.log(viewNote)
- 
-  
-
- const createNewNote =() => {
-    fetch("http://localhost:3000/notes",
-    {
-      method : "POST",
-      headers : {"Content-Type" :  "application/json"},
-      body: JSON.stringify({
-        title: "default",
-        body : "Write New Note"
-      })
-    }) 
-    .then(res=>res.json())
-    .then((data)=> setNotes([...notes, data]))
-
-
+  const onClickSideBar = (note) => {
+    setSelectedNotes(note)
+    setIsSelected(true)
+    toggleIsEdit(false)
   }
 
   return (
     <>
-      <Search 
-      setSearchInput={setSearchInput}
-      />
+      <Search onchangeSearch={setSearchNotes} searchNotes={searchNotes} />
       <div className="container">
         <Sidebar 
-        createNewNote={createNewNote}
-        setViewedNote={setViewedNote}
-        notes={newNotes}
-        setViewerState={setViewerState}
-        setViewNote={setViewNote}
-        />
-        <Content
-        setViewNote={setViewNote} 
-        viewedNote={viewedNote}
-        viewerState={viewerState}
-        setViewerState={setViewerState}
-        viewNote={viewNote}
-         />
+        onClickSideBar = {onClickSideBar}
         
+        setAllNotes={setAllNotes}
+        notes={displayNote} />
+        <Content 
+        selectedNotes={selectedNotes} 
+        isEdit={isEdit}
+        isSelected={isSelected}
+        
+        toggleIsEdit={toggleIsEdit}
+        />
       </div>
     </>
   );

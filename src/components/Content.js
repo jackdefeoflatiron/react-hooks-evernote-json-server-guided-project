@@ -10,25 +10,25 @@ import Instructions from "./Instructions";
           Then complete the rest of your app before attempting to
           refactor to get this Content component to work.
 */
-function Content({note,viewerState, setViewerState, viewNote, setViewNote}) {
+function Content({selectedNotes,toggleIsEdit,isEdit,isSelected}) {
 
-  
+  const toggleEdit = () =>{
+    toggleIsEdit(true)
+  }
 
   const getContent = () => {
-
-    if (viewerState==='editor') {
+    if (isEdit) {
       return <NoteEditor 
-      setViewNote={setViewNote}
-      viewNote={viewNote}
-      setViewerState={setViewerState} 
+      note={selectedNotes} 
+      onCancel = {toggleIsEdit}
       />;
-    } else if (viewerState==='viewer') {
+    } else if (isSelected) {
       return <NoteViewer 
-      viewNote={viewNote}
-      setViewerState={setViewerState}
-      />;
+      note={selectedNotes}
+      onEdit={toggleEdit}
+       />;
     } else {
-      return <Instructions />;
+        return <Instructions />
     }
   };
 
